@@ -1,37 +1,37 @@
 /*
-	"rage_tornado"	                                    
-	{
-		"slot"					"0"						
+	"rage_tornado"	                 											// Ability name can use suffixes                   
+	{	
+		"slot"					"0"												// Ability slot				
 		
-		"range"				    "128.0"					
-		"ignore invuln"		    "false"					
-		"damage per tick"	    "0.2"					
-		"duration"				"1.0"					
-		
-		"plugin_name"	        "ff2r_bones"
-	}
-	
-	"rage_mortis"	                                                                            
-	{
-		"slot"					"0"				                                                
-		
-		"model"				    "models/props_halloween/hammer_mechanism.mdl"					
-		"damage"		        "500.0"					                                        
-		"range"	                "512.0"					                                        
-		"duration"				"8.0"					                                        
+		"duration"				"1.0"											// Ability duration
+		"damage per tick"	    "0.2"											// Damage per tick			
+		"range"				    "128.0"											// Range of tornado  			
+		"ignore invuln"		    "false"											// Ignore uber? (true = yes, false = no)				
 		
 		"plugin_name"	        "ff2r_bones"
 	}
 	
-	"rage_calcium_repossession"	                        
+	"rage_mortis"	                											// Ability name can use suffixes                                                           
 	{
-		"slot"					"0"						
+		"slot"					"0"												// Ability slot			                                                
 		
-		"stun duration"         "3.0"					
-		"effect range"		    "512.0"					
-		"effect damage"	        "-1.0"					 
-		"spawn skeletons"	    "false"					
-		"effect duration"	    "8.0"					
+		"duration"				"8.0"					                        // Ability Duration
+		"damage"		        "500.0"					                        // Damage                 
+		"range"	                "512.0"					                        // Range for mortis		
+		"model"				    "models/props_halloween/hammer_mechanism.mdl"	// Model for mortis 				                             
+		
+		"plugin_name"	        "ff2r_bones"
+	}
+	
+	"rage_calcium_repossession"	                        						// Ability name can use suffixes
+	{
+		"slot"					"0"												// Ability slot						
+		
+		"duration"	    		"8.0"											// Ability duration
+		"effect damage"	        "-1.0"					 						// Damage (if -1.0 = always max damage, i think so)
+		"stun duration"         "3.0"											// Stun after hitting someone 
+		"effect range"		    "512.0"											// Range for calcium effect	
+		"spawn skeletons"	    "false"											// Spawn skeletons after hitting someone? (true = yes, false = no)
 		
 		"plugin_name"	        "ff2r_bones"
 	}
@@ -48,7 +48,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#define PLUGIN_NAME 	"Freak Fortress 2 Rewrite: Spookmaster Jr's Abilities"
+#define PLUGIN_NAME 	"Freak Fortress 2 Rewrite: Spookmaster Bones Abilities"
 #define PLUGIN_AUTHOR 	"J0BL3SS"
 #define PLUGIN_DESC 	"Bad to the Bone"
 
@@ -62,33 +62,15 @@
 #define SPRITE_BEAM 	"materials/sprites/lgtning.vmt"
 #define SPRITE_HALO 	"materials/sprites/halo01.vmt"
 
-/*
- *	Defines: rage_tornado
- */
+float Tornado_Duration[MAXTF2PLAYERS];
+float Tornado_DamagePerTick[MAXTF2PLAYERS];
 float Tornado_Range[MAXTF2PLAYERS];
 bool Tornado_IgnoreInvuln[MAXTF2PLAYERS];
-float Tornado_DamagePerTick[MAXTF2PLAYERS];
 bool IsTornadoActive[MAXTF2PLAYERS];
-float Tornado_Duration[MAXTF2PLAYERS];
 
-/*
- *	Defines: rage_calcium_repossession
- */
-bool Calcium_CanHit[MAXTF2PLAYERS];
-float Calcium_EffectDuration[MAXTF2PLAYERS];
-float Calcium_EffectRange[MAXTF2PLAYERS];
-float Calcium_EffectDamage[MAXTF2PLAYERS];
-bool Calcium_SpawnSkeleton[MAXTF2PLAYERS];
-Handle CalciumTimer[MAXTF2PLAYERS] = { null, ... };
-int CAL_BeamSprite = 0;
-int	CAL_HaloSprite = 0;
-
-/*
- *	Defines: rage_mortis
- */
 float Mortis_Duration[MAXTF2PLAYERS];
-float Mortis_Range[MAXTF2PLAYERS];
 float Mortis_Damage[MAXTF2PLAYERS];
+float Mortis_Range[MAXTF2PLAYERS];
 float Mortis_Position[MAXTF2PLAYERS][3];
 int Mortis_Hammer[MAXTF2PLAYERS];
 
@@ -96,15 +78,18 @@ bool Mortis_Init[MAXTF2PLAYERS] = { false, ... };
 bool Mortis_InUse[MAXTF2PLAYERS] = { false, ... };
 bool Mortis_Enabled[MAXTF2PLAYERS] = { false, ... };
 
+bool Calcium_CanHit[MAXTF2PLAYERS];
+Handle CalciumTimer[MAXTF2PLAYERS] = { null, ... };
+float Calcium_EffectDamage[MAXTF2PLAYERS];
+float Calcium_EffectDuration[MAXTF2PLAYERS];
+float Calcium_EffectRange[MAXTF2PLAYERS];
+bool Calcium_SpawnSkeleton[MAXTF2PLAYERS];
+int CAL_BeamSprite = 0;
+int	CAL_HaloSprite = 0;
+
 float OFF_THE_MAP[3] = {16383.0, 16383.0, -16383.0};	// Kill without mayhem
 
 int Souls_ParticleIndex = -1;
-
-int beam_team_colors_test[3][4] = {
-	{0, 255, 200, 255},
-	{200, 255, 0, 255},
-	{255, 255, 255, 255},
-};
 
 public Plugin myinfo = 
 {
@@ -196,14 +181,13 @@ public void FF2R_OnAbility(int clientIdx, const char[] ability, AbilityData cfg)
 	}
 	if(!StrContains(ability, "rage_calcium_repossession"))
 	{
+		CreateTimer(cfg.GetFloat("duration", 8.0), Timer_RemoveCalcium, GetClientUserId(clientIdx), TIMER_FLAG_NO_MAPCHANGE);
+		Calcium_EffectDamage[clientIdx] = cfg.GetFloat("effect damage", -1.0);
 		Calcium_EffectDuration[clientIdx] = cfg.GetFloat("stun duration", 3.0);
 		Calcium_EffectRange[clientIdx] = cfg.GetFloat("effect range", 512.0);
-		Calcium_EffectDamage[clientIdx] = cfg.GetFloat("effect damage", -1.0);
 		Calcium_SpawnSkeleton[clientIdx] = cfg.GetBool("spawn skeletons", false);
 		
 		Calcium_CanHit[clientIdx] = true;
-		
-		CreateTimer(cfg.GetFloat("effect duration", 8.0), Timer_RemoveCalcium, GetClientUserId(clientIdx), TIMER_FLAG_NO_MAPCHANGE);
 	}
 	if(!StrContains(ability, "rage_mortis"))
 	{
@@ -216,9 +200,9 @@ public void FF2R_OnAbility(int clientIdx, const char[] ability, AbilityData cfg)
 			DispatchSpawn(Mortis_Hammer[clientIdx]);
 		}
 		
+		Mortis_Duration[clientIdx] = cfg.GetFloat("duration", 8.0) + GetGameTime();
 		Mortis_Damage[clientIdx] = cfg.GetFloat("damage", 500.0);
 		Mortis_Range[clientIdx] = cfg.GetFloat("range", 512.0);
-		Mortis_Duration[clientIdx] = cfg.GetFloat("duration", 8.0) + GetGameTime();
 		SDKHook(clientIdx, SDKHook_PreThink, Mortis_PreThink);
 		Mortis_Enabled[clientIdx] = true;
 	}
@@ -603,10 +587,10 @@ public Action Timer_BigBoom(Handle timer, DataPack pack)
 
 public void Rage_Bone_Tornado(int clientIdx, const char[] ability_name, AbilityData ability)
 {
+	Tornado_Duration[clientIdx] = ability.GetFloat("duration", 1.0) + GetGameTime();
+	Tornado_DamagePerTick[clientIdx] = ability.GetFloat("damage per tick", 0.2);
 	Tornado_Range[clientIdx] = ability.GetFloat("range", 128.0);
 	Tornado_IgnoreInvuln[clientIdx] = ability.GetBool("ignore invuln", false);
-	Tornado_DamagePerTick[clientIdx] = ability.GetFloat("damage per tick", 0.2);
-	Tornado_Duration[clientIdx] = ability.GetFloat("duration", 1.0) + GetGameTime();
 	
 	SetEntProp(clientIdx, Prop_Send, "m_CollisionGroup", 2);
 	IsTornadoActive[clientIdx] = true;

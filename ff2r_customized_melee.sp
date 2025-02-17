@@ -1,5 +1,5 @@
 /*
-	"rage_custom_melee"
+	"rage_custom_melee"											// Ability name can use suffixes
 	{	
 		"slot"					"0"								// Ability slot
 		"classname"				"tf_weapon_knife"				// Weapon classname
@@ -18,7 +18,7 @@
 		"class"					""								// Override class setup
 		
 		"weapon duration"		"5.0"							// Duration before weapon decays
-		"remove on hit"			"true"							// Remove weapon upon landing a hit
+		"remove on hit"			"true"							// Remove weapon upon landing a hit 
 		
 		"do slot on hit low"	"11"					        // Activate a slot upon landing a hit
 		"do slot on hit high"	"11"					        // Activate a slot upon landing a hit
@@ -714,15 +714,24 @@ void GetClassWeaponClassname(TFClassType class, char[] name, int length)
 	{ 
 		switch(class)
 		{
-			case TFClass_Scout:	strcopy(name, length, "tf_weapon_bat");
-			case TFClass_Pyro:	strcopy(name, length, "tf_weapon_fireaxe");
-			case TFClass_DemoMan:	strcopy(name, length, "tf_weapon_bottle");
-			case TFClass_Heavy:	strcopy(name, length, "tf_weapon_fists");
-			case TFClass_Engineer:	strcopy(name, length, "tf_weapon_wrench");
-			case TFClass_Medic:	strcopy(name, length, "tf_weapon_bonesaw");
-			case TFClass_Sniper:	strcopy(name, length, "tf_weapon_club");
-			case TFClass_Spy:	strcopy(name, length, "tf_weapon_knife");
-			default:		strcopy(name, length, "tf_weapon_shovel");
+			case TFClass_Scout:			strcopy(name, length, "tf_weapon_bat");
+			case TFClass_Pyro, TFClass_Heavy:	strcopy(name, length, "tf_weapon_fireaxe");
+			case TFClass_DemoMan:			strcopy(name, length, "tf_weapon_bottle");
+			case TFClass_Engineer:			strcopy(name, length, "tf_weapon_wrench");
+			case TFClass_Medic:			strcopy(name, length, "tf_weapon_bonesaw");
+			case TFClass_Sniper:			strcopy(name, length, "tf_weapon_club");
+			case TFClass_Spy:			strcopy(name, length, "tf_weapon_knife");
+			default:				strcopy(name, length, "tf_weapon_shovel");
+		}
+	}
+	else if(StrEqual(name, "tf_weapon_shotgun"))
+	{
+		switch(class)
+		{
+			case TFClass_Pyro:	strcopy(name, length, "tf_weapon_shotgun_pyro");
+			case TFClass_Heavy:	strcopy(name, length, "tf_weapon_shotgun_hwg");
+			case TFClass_Engineer:	strcopy(name, length, "tf_weapon_shotgun_primary");
+			default:		strcopy(name, length, "tf_weapon_shotgun_soldier");
 		}
 	}
 }
