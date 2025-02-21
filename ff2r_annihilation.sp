@@ -1,5 +1,5 @@
 /*
-	"rage_annihilation"														// Ability name can use suffixes	
+	"rage_annihilation"														// Ability name can't use suffixes	
 	{
 		"slot"					"0"											// Ability slot
 		
