@@ -2,6 +2,7 @@
 	"rage_custom_melee"											// Ability name can use suffixes
 	{	
 		"slot"					"0"								// Ability slot
+		
 		"classname"				"tf_weapon_knife"				// Weapon classname
 		"attributes"			"2 ; 3.0 ; 6 ; 0.5 ; 37 ; 0.0"	// Weapon attributes (Values can be formulas)
 		"index"					"1005"							// Weapon index

@@ -1,19 +1,21 @@
 /*
-	"rage_tfcondition"	// Ability name can use suffixes
+	"rage_tfcondition"												// Ability name can use suffixes
 	{
-		"slot"			"0"						// Ability slot
-		"selfconds"		"5 ; 5.8"				// Self conditions
-		"allyconds"		"5 ; 2.7"				// Ally conditions
-		"allyrange"		"1024.0"				// Ally range
-		"enemyconds"	"27 ; 7.7 ; 24 ; 7.7"	// Enemy conditions
-		"enemyrange"	"1337.0"				// Enemy range
+		"slot"								"0"						// Ability slot
 		
-		"plugin_name"	"ff2r_tfcond"
+		"selfconds"							"5 ; 5.8"				// Self conditions
+		"allyconds"							"5 ; 2.7"				// Ally conditions
+		"allyrange"							"1024.0"				// Ally range
+		"enemyconds"						"24 ; 7.7 ; 27 ; 7.7"	// Enemy conditions
+		"enemyrange"						"1337.0"				// Enemy range
+		
+		"plugin_name"						"ff2r_tfcond"
 	}
 	
-	"tweak_tfcondition"	// Ability name can't use suffixes, no multiple instances
+	"tweak_tfcondition"												// Ability name can't use suffixes, no multiple instances
 	{
 		"slot"								"0"						// Ability slot (not required)
+		
 		"selfconds"							"11 ; -1.0"				// Self conditions
 		
 		"allyconds"							"5 ; 20.0"				// Ally conditions
@@ -21,7 +23,7 @@
 		"apply allyconds upon respawn"		"true"					// Apply allyconds to allied players when they are respawn 
 																	// (Only unlimited duration conditions re-apply & conditions don't re-apply if boss is dead)
 																	
-		"enemyconds"						"27 ; 7.7 ; 24 ; -1.0"	// Enemy conditions
+		"enemyconds"						"24 ; -1.0 ; 27 ; 7.7"	// Enemy conditions
 		"remove enemyconds on boss death"	"true"					// Remove enemyconds on boss death
 		"apply enemyconds upon respawn"		"true"					// Apply enemyconds to enemy players when they are respawn
 																	// (Only unlimited duration conditions re-apply & conditions don't re-apply if boss is dead)

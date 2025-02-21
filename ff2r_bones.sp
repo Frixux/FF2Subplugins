@@ -15,7 +15,7 @@
 	{
 		"slot"					"0"												// Ability slot			                                                
 		
-		"duration"				"8.0"					                        // Ability Duration
+		"duration"				"8.0"					                        // Ability duration
 		"damage"		        "500.0"					                        // Damage                 
 		"range"	                "512.0"					                        // Range for mortis		
 		"model"				    "models/props_halloween/hammer_mechanism.mdl"	// Model for mortis 				                             

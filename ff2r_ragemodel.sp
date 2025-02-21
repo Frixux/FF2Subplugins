@@ -1,7 +1,8 @@
 /*
-	"rage_model"	// Ability name can use suffixes
+	"rage_model"																								// Ability name can use suffixes
 	{
 		"slot"								"0"																	// Ability slot
+		
 		"duration"							"10.0"																// Ability duration
 		"ragemodel"							"models/freak_fortress_2/testboss/test_ragemodel.mdl"				// Rage model path
 		"use class anims on ragemodel"		"true"																// Should we use class animations on ragemodel?
@@ -12,9 +13,10 @@
 	}
 	
 	// Unlimited argument count, if ability activated more than argument count; keeps the last model
-	"phase_model"	// Ability name can use suffixes
+	"phase_model"																								// Ability name can use suffixes
 	{
 		"slot"								"-1"																// Ability slot
+		
 		"phase1 model"						"models/freak_fortress_2/testboss/test_angrymodel_01.mdl"			// Phase one model path
 		"use class anims on phase1"			"true"																// Should we use class animations on phase1?
 		"phase2 model"						"models/freak_fortress_2/testboss/test_angrymodel_01.mdl"			// Phase two model path

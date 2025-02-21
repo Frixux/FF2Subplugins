@@ -2,28 +2,29 @@
 	"rage_movespeed"	                                // Ability name can use suffixes
 	{
 		"slot"					"0"						// Ability slot
-		"duration"				"10.0"					// Ability duration
+		
+		"duration"				"8.0"					// Ability duration
 		"selfspeed"				"520.0"					// Self move speed
-		"allyspeed"				"400.0"					// Ally move speed
+		"allyspeed"				"420.0"					// Ally move speed
 		"allyrange"				"768.0"					// Ally range
-		"enemyspeed"			"225.0"					// Enemy move speed
+		"enemyspeed"			"230.0"					// Enemy move speed
 		"enemyrange"			"768.0"					// Enemy range
 		
 		"plugin_name"	        "ff2r_movespeed"
 	}
 	
 	// Future Project - from halloween_2014
-	"special_proportional_speed"		        // Ability name can't use suffixes, no multiple instances
+	"special_proportional_speed"		        		// Ability name can't use suffixes, no multiple instances
 	{
-		"slot"					"0"				// Ability slot (This ability works passively)
-		"enemyspeed ratio"		"0.6"			// Speed Ratio		
-		"enemyrange"			"600.0"			// Enemy range
-		"allyspeed ratio"		"1.25"			// Speed Ratio		
-		"allyrange"				"512.0"			// Ally range (Self is Excluded)
+		"slot"					"0"						// Ability slot (This ability works passively)
+		
+		"enemyspeed ratio"		"0.6"					// Speed Ratio		
+		"enemyrange"			"600.0"					// Enemy range
+		"allyspeed ratio"		"1.25"					// Speed Ratio		
+		"allyrange"				"512.0"					// Ally range (Self is Excluded)
 		
 		"plugin_name"	        "ff2r_movespeed"
 	}
-	
 */
 
 #include <sourcemod>
@@ -41,7 +42,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#define PLUGIN_NAME     "Freak Fortress 2 Rewrite: My Stock Subplugin"
+#define PLUGIN_NAME     "Freak Fortress 2 Rewrite: Move Speed"
 #define PLUGIN_AUTHOR   "J0BL3SS"
 #define PLUGIN_DESC     "Subplugin for applying speed on players"
 
@@ -53,13 +54,14 @@
 #define MAXTF2PLAYERS   MAXPLAYERS+1
 #define INACTIVE        100000000.0
 
+float MS_Duration[MAXTF2PLAYERS];
 float MS_SelfMoveSpeed[MAXTF2PLAYERS];
 
 float MS_AllyMoveSpeed[MAXTF2PLAYERS];
 float MS_AllyRange[MAXTF2PLAYERS];
+
 float MS_EnemyMoveSpeed[MAXTF2PLAYERS];
 float MS_EnemyRange[MAXTF2PLAYERS];
-float MS_Duration[MAXTF2PLAYERS];
 
 public Plugin myinfo = 
 {
@@ -79,7 +81,7 @@ public void OnPluginEnd()
 
 public void FF2R_OnAbility(int clientIdx, const char[] ability, AbilityData cfg)
 {
-	if(!cfg.IsMyPlugin())	// Incase of duplicated ability names
+	if(!cfg.IsMyPlugin())	
 		return;
 	
 	if(!StrContains(ability, "rage_movespeed", false))
@@ -90,6 +92,7 @@ public void FF2R_OnAbility(int clientIdx, const char[] ability, AbilityData cfg)
 
 public void Ability_MoveSpeed(int clientIdx, const char[] ability_name, AbilityData ability)
 {
+	MS_Duration[clientIdx] = ability.GetFloat("duration", 8.0) + GetGameTime();
 	MS_SelfMoveSpeed[clientIdx] = ability.GetFloat("selfspeed", 520.0);
 	
 	MS_AllyMoveSpeed[clientIdx] = ability.GetFloat("allyspeed", 420.0);
@@ -98,7 +101,6 @@ public void Ability_MoveSpeed(int clientIdx, const char[] ability_name, AbilityD
 	MS_EnemyMoveSpeed[clientIdx] = ability.GetFloat("enemyspeed", 230.0);
 	MS_EnemyRange[clientIdx] = ability.GetFloat("enemyrange", 0.0);
 	
-	MS_Duration[clientIdx] = ability.GetFloat("duration", 8.0) + GetGameTime();
 	SDKHook(clientIdx, SDKHook_PreThink, MSpeed_PreThink);
 }
 

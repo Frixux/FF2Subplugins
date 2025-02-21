@@ -1,46 +1,48 @@
 /*
-	"rage_annihilation"	// Ability name can't use suffixes
+	"rage_annihilation"														// Ability name can use suffixes	
 	{
-		"slot"		"0"			// Ability Slot
-		"damage"	"10.0"		// Damage per second
-		"range"		"600.0"		// Annihilation range
-		"heal"		"false"		// Damage dealt turns into health?
-		"walls"		"true"		// Can attack trough walls?
-		"extend"	"true"		// Extend rage duration as long as someone in range
-		"plugin_name"		"ff2r_annihilation"		// this subplugin name
-	}
-	
-	"rage_ion_cannon"	// Ability name can use suffixes
-	{
-		"slot"		"0"			// Ability Slot
-		"delay"		"3.0"		// Initial delay	
-		"damage"	"1000.0"	// Damage at pointblank
-		"range"		"600.0"		// Cannon range
-		"force"		"1000.0"	// Knockback force
-		"vertical"	"475.0"		// Vertical force	
-		"walls"		"true"		// Can deal damage trough walls?
-		"aim mode"	"0"			// 0:Stand Position, 1:Aim Position
-		"plugin_name"	"ff2r_annihilation"		// this subplugin name
-	}
-	
-	"rage_angermode"	// Ability name can use suffixes
-	{
-		"slot"			"0"			// Ability Slot
-		"max"			"4000.0"	// Max Anger Limit
-		"rate"			"1.0"		// Anger gained per damage
-		"airblast"		"200.0"		// Anger gained on airblast
-		"scout"			"0.75"		// Anger gained per tick when only scouts left
-		"activation"	"200.0"		// Anger directly wasted upon activation
-		""
+		"slot"					"0"											// Ability slot
 		
-		"discharge"	"2.0"				// Discharge rate per tick
-		"damage"	"(x * 0.5) + 1.0"	// increasement on damage ratio n:player count, x:anger ratio
-		"speed"		"(x * 0.5) + 1.0"	// increasement on movespeed ratio n:player count, x:anger ratio
-		"attack"	""
+		"damage"				"10.0"										// Damage per second
+		"range"					"600.0"										// Annihilation range
+		"heal"					"false"										// Damage dealt turns into health?
+		"walls"					"true"										// Can attack trough walls?
+		"extend"				"true"										// Extend rage duration as long as someone in range
+		
+		"plugin_name"			"ff2r_annihilation"		
+	}
+	"rage_ion_cannon"														// Ability name can use suffixes
+	{
+		"slot"					"0"											// Ability slot
+		
+		"delay"					"3.0"										// Initial delay	
+		"damage"				"1000.0"									// Damage at pointblank
+		"range"					"600.0"										// Cannon range
+		"force"					"1000.0"									// Knockback force
+		"vertical"				"475.0"										// Vertical force	
+		"walls"					"true"										// Can deal damage trough walls?
+		"aim mode"				"0"											// 0 = Stand Position, 1 = Aim Position
+		
+		"plugin_name"			"ff2r_annihilation"		
 	}
 	
-	
-	
+	// Future Project 
+	"rage_angermode"														// Ability name can use suffixes
+	{
+		"slot"					"0"											// Ability slot
+		
+		"max"					"4000.0"									// Max Anger Limit
+		"rate"					"1.0"										// Anger gained per damage
+		"airblast"				"200.0"										// Anger gained on airblast
+		"scout"					"0.75"										// Anger gained per tick when only scouts left
+		"activation"			"200.0"										// Anger directly wasted upon activation
+		
+		"discharge"				"2.0"										// Discharge rate per tick
+		"damage"				"(x * 0.5) + 1.0"							// increasement on damage ratio n:player count, x:anger ratio
+		"speed"					"(x * 0.5) + 1.0"							// increasement on movespeed ratio n:player count, x:anger ratio
+		
+		"plugin_name"			"ff2r_annihilation"
+	}
 */
 
 #include <sourcemod>
@@ -248,7 +250,6 @@ public void Annihilation_PreThink(int clientIdx)
 		PrintCenterText(clientIdx, "Remaining Duration: 0.00");
 }
 
-
 public Action Timer_RemoveEntity(Handle timer, any entid)
 {
 	int entity = EntRefToEntIndex(entid);
@@ -290,7 +291,6 @@ stock int TF2_SpawnAndConnectMedigunBeam(int healer, int target, float offset = 
 
 	return particle;
 }
-
 
 stock bool IsValidClient(int clientIdx, bool replaycheck=true)
 {
